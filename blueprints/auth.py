@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request,Flask
 from random import randint
 import jwt
 import datetime
@@ -6,6 +6,9 @@ import datetime
 import models.auth_model as am
 from utils.config import JWT_SECRET_KEY
 from utils.guards import token_required
+
+from flask_mail import Mail,Message
+
 
 auth = Blueprint('auth', __name__)
 
@@ -26,8 +29,43 @@ def signup():
     verify_code = randint(1000, 9999)
     am.create_user(firstname, lastname, email, hashed_password, verify_code, 'user.png')
 
-    # TASK- send verification email with verify_code
+   # ***************************************************************************************
 
+app=Flask(__name__)
+mail=Mail(app)
+
+app.config["MAIL_SERVER"]='smtp.gmail.com'
+app.config["MAIL_PORT"]=465
+app.config["MAIL_USERNAME"]='mkhedre3@gmail.com'
+app.config['MAIL_PASSWORD']='*********'                    
+app.config['MAIL_USE_TLS']=False
+app.config['MAIL_USE_SSL']=True
+mail=Mail(app)
+
+
+@app.route('/')
+def index():
+    return jsonify({'message':'enter email'}),201
+
+@app.route('/verify',methods=["POST"])
+def verify():
+    email=request.form['email']
+    msg=Message(subject='OTP',sender='mkhedre3@gmail.com',recipients=[email])
+    msg.body=str(verify_code)
+    mail.send(msg)
+    return jsonify({'message':'password has been sent to the mail id. please check'}),201
+
+@app.route('/validate',methods=['POST'])
+def validate():
+    user_otp=request.form['verify_code']
+    if verify_code==int(user_otp):
+        return jsonify({'message':'Email varification succesfull'}),200
+    return jsonify({'message':'Please Try Again'}) ,201
+
+#if __name__ == '__main__':
+  #  app.run(debug=True)
+
+#**********************************************************************************************
     return jsonify({'message': 'account created'}), 201
 
 

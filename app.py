@@ -17,6 +17,6 @@ app.register_blueprint(user, url_prefix='/api/user')
 
 if __name__ == "__main__":
     DB()
-    # DB.create_tables()
-    # DB.init_data()
+    #DB.create_tables()
+    #DB.init_data()
     app.run(port=3000, debug=True)

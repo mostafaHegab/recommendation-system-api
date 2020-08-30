@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
+import datetime
 import models.places_model as pm
-from utils.guards import token_required
 from utils.config import ITEMS_PER_PAGE
+from utils.uploader import upload_place_image
 
 places = Blueprint('places', __name__)
 
@@ -19,8 +20,22 @@ def place_images(id):
         images = pm.get_place_images(id)
         return jsonify(images), 200
     elif request.method == 'POST':
-        # upload new image
-        return jsonify({'message': 'image uploaded'}), 201
+        allowed_image_extentions = ["JPEG", "JPG", "PNG"]
+        if request.files:
+            image = request.files["image"]
+            if image.filename == "":
+                return jsonify({'message': 'File has no name'}), 403
+            if not "." in image.filename:
+                return jsonify({'message': 'File has no extension'}), 403
+            ext = image.filename.rsplit(".", 1)[1]
+            if not ext.upper() in allowed_image_extentions:
+                return jsonify({'message': 'unacceptable extension'}), 403
+            filename = f'{datetime.datetime.now().timestamp()}-{image.filename}'
+            upload_place_image(image, id, filename)
+            pm.add_place_image(id, filename)
+            return jsonify({'message': 'image uploaded'}), 201
+
+        return jsonify({'message': 'image not provided'}), 403
 
 
 @places.route('<int:id>/comments/<int:page>')
@@ -30,32 +45,38 @@ def get_comments(id, page):
     comments = pm.get_place_comments(id, skip, limit)
     return jsonify(comments), 200
 
-@places.route('/visited', methods=['GET', 'POST'])
-def visited(id):
-    if request.method == 'GET' :
-        name=pm.visited_places(id)
-    #images=pm.get_place_images(id,name)
-    #rate=pm.place_info(id)
-        return jsonify(name),200
-    elif request.method == 'POST':
-        add_visited_pl = pm.add_place(id)
-        return jsonify({'message' : 'place added'}),201
 
-@places.route('/delete/<int:id>', methods=['DELETE'])
-def deleted(id):
-    del_place = pm.delete_visit(id,'1')
-    return jsonify({'message' : 'deleted'})
+@places.route('/visited', methods=['GET', 'POST'])
+def visited():
+    uid = 1
+    if request.method == 'GET':
+        places = pm.visited_places(id)
+        return jsonify(places), 200
+    elif request.method == 'POST':
+        pm.add_visit(request.json['pid'], uid)
+        return jsonify({'message': 'place added'}), 201
+
+
+@places.route('visited/<int:pid>', methods=['DELETE'])
+def delete_visit(pid):
+    uid = 1
+    pm.delete_visit(pid, uid)
+    return jsonify({'message': 'deleted'})
+
 
 @places.route('/fav', methods=['GET', 'POST'])
-def favorite(id):
-    if request.method == 'GET' :
-        name=pm.favorits_places(id)
-        return jsonify(name),200
+def favorite():
+    uid = 1
+    if request.method == 'GET':
+        name = pm.favorits_places(uid)
+        return jsonify(name), 200
     elif request.method == 'POST':
-        add_fav = pm.add_favorit(id)
-        return jsonify(add_fav),201
+        pm.add_favorit(request.json['pid'], uid)
+        return jsonify({'message': 'added'}), 201
 
-@places.route('/fav/<int:id>', methods=['DELETE'])
-def deleted(id):
-    del_place = pm.delete_favorit(id,'1')
-    return jsonify({'message' : 'deleted'})
+
+@places.route('/fav/<int:pid>', methods=['DELETE'])
+def delete_fav(pid):
+    uid = 1
+    pm.delete_favorit(pid, uid)
+    return jsonify({'message': 'deleted'})

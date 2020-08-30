@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1e22b104-9a4f-4f77-96d9-c4e92b4b75e7" name="Default Changelist" comment="" />
+    <list default="true" id="1e22b104-9a4f-4f77-96d9-c4e92b4b75e7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/uploads/1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/mailer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/uploader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blueprints/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blueprints/places.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/places.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blueprints/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emil.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/endpoints.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/users_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/users_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/config.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,13 +29,20 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1gQO4mY1ZQ3rQP7TBCdPNW06ivP" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
   </component>
   <component name="RecentsManager">
@@ -91,30 +113,33 @@
     </task>
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="450" y="171" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1598197865036">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="450" y="171" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738@0.0.1366.738" timestamp="1598197865036" />
-    <state width="1345" height="182" key="GridCell.Tab.0.bottom" timestamp="1598527293063">
+    <state width="1345" height="182" key="GridCell.Tab.0.bottom" timestamp="1598815377520">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="182" key="GridCell.Tab.0.bottom/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598527293063" />
+    <state width="1345" height="182" key="GridCell.Tab.0.bottom/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598815377520" />
     <state width="1345" height="182" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1598521528629" />
-    <state width="1345" height="182" key="GridCell.Tab.0.center" timestamp="1598527293063">
+    <state width="1345" height="182" key="GridCell.Tab.0.center" timestamp="1598815377520">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="182" key="GridCell.Tab.0.center/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598527293063" />
+    <state width="1345" height="182" key="GridCell.Tab.0.center/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598815377520" />
     <state width="1345" height="182" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1598521528629" />
-    <state width="1345" height="182" key="GridCell.Tab.0.left" timestamp="1598527293063">
+    <state width="1345" height="182" key="GridCell.Tab.0.left" timestamp="1598815377519">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="182" key="GridCell.Tab.0.left/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598527293063" />
+    <state width="1345" height="182" key="GridCell.Tab.0.left/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598815377519" />
     <state width="1345" height="182" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1598521528628" />
-    <state width="1345" height="182" key="GridCell.Tab.0.right" timestamp="1598527293063">
+    <state width="1345" height="182" key="GridCell.Tab.0.right" timestamp="1598815377520">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="182" key="GridCell.Tab.0.right/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598527293063" />
+    <state width="1345" height="182" key="GridCell.Tab.0.right/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1598815377520" />
     <state width="1345" height="182" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1598521528629" />
   </component>
 </project>

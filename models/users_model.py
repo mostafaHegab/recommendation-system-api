@@ -1,6 +1,5 @@
 from .db import DB
-import uuid
-import os 
+
 db = DB().db
 
 

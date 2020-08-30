@@ -1,4 +1,6 @@
 from .db import DB
+import uuid
+import os 
 db = DB().db
 
 
@@ -32,6 +34,15 @@ def change_password(id, password):
     c = db.cursor()
     c.execute(f'UPDATE users SET password = "{password}" WHERE id = {id}')
     res = c.rowcount
+    db.commit()
+    c.close()
+    return res
+
+
+def get_user_password(id):
+    c = db.cursor(dictionary=True)
+    c.execute(f'SELECT password FROM users WHERE id ={id}')
+    res = c.fetchall()[0]
     db.commit()
     c.close()
     return res

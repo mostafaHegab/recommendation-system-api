@@ -9,6 +9,7 @@ verify_ssl = true
 flask = "*"
 mysql-connector-python = "*"
 pyjwt = "*"
+jwt = "*"
 
 [requires]
 python_version = "3.7"

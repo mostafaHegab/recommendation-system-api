@@ -7,6 +7,8 @@ import models.auth_model as am
 from utils.config import JWT_SECRET_KEY, MAIL_CONFIG
 from utils.mailer import Mailer
 
+from blueprints import security
+
 auth = Blueprint('auth', __name__)
 
 
@@ -21,7 +23,7 @@ def signup():
         return jsonify({'message': 'account already exists'}), 302
 
     # TASK- hash password
-    hashed_password = password
+    hashed_password = security.encrypt_password(password)
 
     verify_code = randint(1000, 9999)
     am.create_user(firstname, lastname, email, hashed_password, verify_code, 'user.png')
@@ -67,7 +69,7 @@ def login():
         return jsonify({'message': 'account not verified'}), 403
 
     # TASK- compare with hashed password
-    if password != user['password']:
+    if not security.check_encrypted_password(password, security.encrypt_password(password)): ## TODO: compare with hashed password on the sever
         return jsonify({'message': 'wrong password'}), 406
 
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
@@ -108,7 +110,7 @@ def reset_password():
         return jsonify({'message': 'wrong code'}), 406
 
     # TASK- hash password
-    hashed_password = password
+    hashed_password = security.encrypt_password(password)
     am.reset_password(users[0]['id'], hashed_password)
 
 

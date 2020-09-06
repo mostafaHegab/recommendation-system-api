@@ -3,6 +3,8 @@ import models.users_model as um
 from werkzeug.utils import secure_filename
 from utils.uploader import upload_user_image
 
+from blueprints import security
+
 user = Blueprint('user', __name__)
 
 
@@ -54,8 +56,11 @@ def change_user_password():
     user_pass = um.get_user_password(id)['password']
 
     # TASK- Compare to hashed password
-    if user_pass != oldpassword:
+    if not security.check_encrypted_password(user_pass, oldpassword):
         return make_response(jsonify({'message': 'Wrong Password'}), 406)
+
+    if user_pass != oldpassword:
+        return make_response(jsonify({'message': 'Password Too Similar To Old Password'}), 406)
 
     um.change_password(id, newpassword)
     return make_response(jsonify({'message': 'Password Changed'}), 200)

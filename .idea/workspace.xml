@@ -2,20 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1e22b104-9a4f-4f77-96d9-c4e92b4b75e7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/uploads/1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/mailer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/uploader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blueprints/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueprints/places.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/places.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blueprints/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/security.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blueprints/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emil.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/endpoints.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/users_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/users_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +40,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\projects\Grad Proj\grad-proj-api\utils" />
       <recent name="D:\projects\Grad Proj\grad-proj-api\db" />
     </key>
   </component>

@@ -7,7 +7,7 @@ import models.auth_model as am
 from utils.config import JWT_SECRET_KEY, MAIL_CONFIG
 from utils.mailer import Mailer
 
-from blueprints import security
+from utils import security
 
 auth = Blueprint('auth', __name__)
 
@@ -22,17 +22,18 @@ def signup():
     if (len(users) > 0):
         return jsonify({'message': 'account already exists'}), 302
 
-    # TASK- hash password
     hashed_password = security.encrypt_password(password)
 
     verify_code = randint(1000, 9999)
-    am.create_user(firstname, lastname, email, hashed_password, verify_code, 'user.png')
+    am.create_user(firstname, lastname, email,
+                   hashed_password, verify_code, 'user.png')
 
     email_body = f'''
         please use the below code to verify your email
         {verify_code}
     '''
-    Mailer.send_email('Email Verification', email_body, MAIL_CONFIG['auth_mailer'], email)
+    Mailer.send_email('Email Verification', email_body,
+                      MAIL_CONFIG['auth_mailer'], email)
 
     return jsonify({'message': 'account created'}), 201
 
@@ -45,12 +46,15 @@ def verify():
     if len(users) == 0:
         return jsonify({'message': 'no account matches this email'}), 404
     user = users[0]
+    if user['verified'] == 0:
+        return jsonify({'message': 'already verified'}), 200
     if code != user['verified']:
         return jsonify({'message': 'wrong code'}), 406
     am.verify_account(user['id'])
 
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
-    access_token = jwt.encode({'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
+    access_token = jwt.encode(
+        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
     refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
     return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
@@ -68,12 +72,12 @@ def login():
     if user['verified'] != 0:
         return jsonify({'message': 'account not verified'}), 403
 
-    # TASK- compare with hashed password
-    if not security.check_encrypted_password(password, security.encrypt_password(password)): ## TODO: compare with hashed password on the sever
+    if not security.check_encrypted_password(password, user['password']):
         return jsonify({'message': 'wrong password'}), 406
 
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
-    access_token = jwt.encode({'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
+    access_token = jwt.encode(
+        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
     refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
     return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
@@ -93,7 +97,8 @@ def send_reset_code():
             please use the below code to reset your password
             {code}
         '''
-    Mailer.send_email('Email Verification', email_body, MAIL_CONFIG['auth_mailer'], email)
+    Mailer.send_email('Email Verification', email_body,
+                      MAIL_CONFIG['auth_mailer'], email)
 
     return jsonify({'message': 'code sent'}), 200
 
@@ -109,7 +114,6 @@ def reset_password():
     if code != users[0]['code']:
         return jsonify({'message': 'wrong code'}), 406
 
-    # TASK- hash password
     hashed_password = security.encrypt_password(password)
     am.reset_password(users[0]['id'], hashed_password)
 
@@ -127,7 +131,8 @@ def refresh_token():
 
     uid = jwt.decode(old_token, JWT_SECRET_KEY, verify=False)['uid']
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
-    access_token = jwt.encode({'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY)
+    access_token = jwt.encode(
+        {'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY)
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
     refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
     return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,

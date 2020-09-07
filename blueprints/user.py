@@ -1,9 +1,9 @@
-from flask import Blueprint, jsonify, request, make_response, redirect
+from flask import Blueprint, jsonify, request, make_response
 import models.users_model as um
 from werkzeug.utils import secure_filename
 from utils.uploader import upload_user_image
 
-from blueprints import security
+from utils import security
 
 user = Blueprint('user', __name__)
 
@@ -56,7 +56,7 @@ def change_user_password():
     user_pass = um.get_user_password(id)['password']
 
     # TASK- Compare to hashed password
-    if not security.check_encrypted_password(user_pass, oldpassword):
+    if not security.check_encrypted_password(oldpassword, user_pass):
         return make_response(jsonify({'message': 'Wrong Password'}), 406)
 
     if user_pass != oldpassword:

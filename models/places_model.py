@@ -2,10 +2,18 @@ from .db import DB
 db = DB().db
 
 
+def get_places():
+    c = db.cursor(dictionary=True)
+    c.execute(f'SELECT * FROM places')
+    res = c.fetchall()
+    c.close()
+    return res
+
+
 def add_place(name, country, city, lat, lng):
     c = db.cursor()
     c.execute(f'INSERT INTO places (name, country, city, lat, lng) VALUES ("{name}", "{country}", "{city}", {lat}, {lng})')
-    res = c.rowcount
+    res = c.lastrowid
     db.commit()
     c.close()
     return res

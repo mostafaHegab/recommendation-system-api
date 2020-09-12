@@ -7,6 +7,31 @@ from utils.uploader import upload_place_image
 places = Blueprint('places', __name__)
 
 
+@places.route('', methods=['POST'])
+def add_place():
+    name = request.json['name']
+    country = request.json['country']
+    city = request.json['city']
+    lat = request.json['lat']
+    lng = request.json['lng']
+    id = pm.add_place(name, country, city, lat, lng)
+    return jsonify({'pid': id}), 201
+
+
+@places.route('rec', methods=['POST'])
+def get_recommendations():
+    places = pm.get_places()
+    return jsonify({'places': places}), 200
+
+
+@places.route('search', methods=['GET'])
+def search():
+    country = request.args.get('c')
+    key = request.args.get('k')
+    places = pm.get_places()
+    return jsonify({'places': places}), 200
+
+
 @places.route('<int:id>', methods=['GET'])
 def get_place_info(id):
     info = pm.place_info(id)

@@ -3,9 +3,10 @@ db = DB().db
 
 
 def add_rate(rate, pid, uid):
+    id = DB.generate_random_id()
     c = db.cursor()
     c.execute(
-        f'INSERT INTO ratings (rate, pid, uid) values ({rate}, {pid}, {uid})')
+        f'INSERT INTO ratings (id, rate, pid, uid) values ({id}, {rate}, {pid}, {uid})')
     res = c.rowcount
     db.commit()
     c.close()

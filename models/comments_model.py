@@ -3,9 +3,10 @@ db = DB().db
 
 
 def add_comment(text, time, pid, uid):
+    id = DB.generate_random_id()
     c = db.cursor()
     c.execute(
-        f'INSERT INTO comments (text, time, pid, uid) values ("{text}", "{time}", {pid}, {uid})')
+        f'INSERT INTO comments (id, text, time, pid, uid) values ({id}, "{text}", "{time}", {pid}, {uid})')
     res = c.rowcount
     db.commit()
     c.close()

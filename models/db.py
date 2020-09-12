@@ -1,3 +1,6 @@
+import datetime
+from random import randint, shuffle
+
 import mysql.connector
 from utils.config import DB_CONFIG
 
@@ -29,3 +32,11 @@ class DB:
                 c.execute(line)
         DB.db.commit()
         c.close()
+
+    @staticmethod
+    def generate_random_id():
+        id = f'{int(datetime.datetime.now().timestamp())}{randint(0,9999)}'
+        id = list(id)
+        shuffle(id)
+        id = ''.join(id)
+        return int(id)

@@ -1,18 +1,12 @@
-import datetime
-from random import randint, shuffle
-
 from .db import DB
 db = DB().db
 
 
 def create_user(firstname, lastname, email, password, verified, image):
-    id = f'{int(datetime.datetime.now().timestamp())}{randint(0,9999)}'
-    id = list(id)
-    shuffle(id)
-    id = ''.join(id)
+    id = DB.generate_random_id()
     c = db.cursor()
     c.execute(
-        f'INSERT INTO users (id, firstname, lastname, email, password, verified, image) VALUES ("{id}", "{firstname}", "{lastname}", "{email}", "{password}", {verified}, "{image}")')
+        f'INSERT INTO users (id, firstname, lastname, email, password, verified, image) VALUES ({id}, "{firstname}", "{lastname}", "{email}", "{password}", {verified}, "{image}")')
     res = c.rowcount
     db.commit()
     c.close()

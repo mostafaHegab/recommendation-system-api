@@ -11,8 +11,9 @@ def get_places():
 
 
 def add_place(name, country, city, lat, lng):
+    id = DB.generate_random_id()
     c = db.cursor()
-    c.execute(f'INSERT INTO places (name, country, city, lat, lng) VALUES ("{name}", "{country}", "{city}", {lat}, {lng})')
+    c.execute(f'INSERT INTO places (id, name, country, city, lat, lng) VALUES ({id}, "{name}", "{country}", "{city}", {lat}, {lng})')
     res = c.lastrowid
     db.commit()
     c.close()
@@ -36,8 +37,9 @@ def get_place_images(id):
 
 
 def add_place_image(pid, name):
+    id = DB.generate_random_id()
     c = db.cursor()
-    c.execute(f'INSERT INTO images (pid, name) VALUES ({pid}, "{name}")')
+    c.execute(f'INSERT INTO images (id, pid, name) VALUES ({id}, {pid}, "{name}")')
     res = c.rowcount
     db.commit()
     c.close()
@@ -63,8 +65,9 @@ def visited_places(uid):
 
 
 def add_visit(pid, uid):
+    id = DB.generate_random_id()
     c = db.cursor()
-    c.execute(f'INSERT INTO visits (pid, uid) VALUES ({pid}, {uid})')
+    c.execute(f'INSERT INTO visits (id, pid, uid) VALUES ({id}, {pid}, {uid})')
     res = c.rowcount
     db.commit()
     c.close()
@@ -90,8 +93,9 @@ def favorits_places(uid):
 
 
 def add_favorit(pid, uid):
+    id = DB.generate_random_id()
     c = db.cursor()
-    c.execute(f'INSERT INTO favorites (pid, uid) VALUES ({pid}, {uid})')
+    c.execute(f'INSERT INTO favorites (id, pid, uid) VALUES ({id}, {pid}, {uid})')
     res = c.rowcount
     db.commit()
     c.close()

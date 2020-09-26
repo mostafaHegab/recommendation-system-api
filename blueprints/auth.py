@@ -4,7 +4,7 @@ import jwt
 import datetime
 
 import models.auth_model as am
-from utils.config import JWT_SECRET_KEY, MAIL_CONFIG
+from utils.config import JWT_SECRET_KEY, ACCESS_TOKEN_EXPIRATION_OFFSET, REFRESH_TOKEN_EXPIRATION_OFFSET, MAIL_CONFIG
 from utils.mailer import Mailer
 
 from utils import security
@@ -52,10 +52,10 @@ def verify():
         return jsonify({'message': 'wrong code'}), 406
     am.verify_account(user['id'])
 
-    access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
+    access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
         {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
-    refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
+    refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
     refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
     return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
                     'refresh_token': refresh_token.decode('UTF-8'), 'refresh_token_exp': refresh_token_exp}), 200
@@ -75,10 +75,10 @@ def login():
     if not security.check_encrypted_password(password, user['password']):
         return jsonify({'message': 'wrong password'}), 406
 
-    access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
+    access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
         {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
-    refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
+    refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
     refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
     return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
                     'refresh_token': refresh_token.decode('UTF-8'), 'refresh_token_exp': refresh_token_exp}), 200
@@ -111,12 +111,13 @@ def reset_password():
     users = am.get_reset_code(email)
     if len(users) == 0:
         return jsonify({'message': 'no account matches this email'}), 404
-    if code != users[0]['code']:
+    if code != users[0]['reset_code']:
         return jsonify({'message': 'wrong code'}), 406
 
-    hashed_password = security.encrypt_password(password)
+    hashed_password = security.encrypt_password(str(password))
     am.reset_password(users[0]['id'], hashed_password)
 
+    return jsonify({"message": "password changed"}), 200
 
 @auth.route('refresh_token', methods=['POST'])
 def refresh_token():
@@ -130,10 +131,10 @@ def refresh_token():
         return jsonify({'message': 'invalid refresh token'}), 403
 
     uid = jwt.decode(old_token, JWT_SECRET_KEY, verify=False)['uid']
-    access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
+    access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
         {'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY)
-    refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
+    refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
     refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
     return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
                     'refresh_token': refresh_token.decode('UTF-8'), 'refresh_token_exp': refresh_token_exp}), 200

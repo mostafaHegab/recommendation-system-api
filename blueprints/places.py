@@ -14,27 +14,33 @@ def add_place():
     city = request.json['city']
     lat = request.json['lat']
     lng = request.json['lng']
+    description = request.json['description']
     id = pm.add_place(name, country, city, lat, lng)
     return jsonify({'pid': id}), 201
 
 
-@places.route('rec', methods=['POST'])
+@places.route('rec', methods=['GET'])
 def get_recommendations():
-    places = pm.get_places()
-    return jsonify({'places': places}), 200
+    uid = 1
+    page = int(request.args.get('page'))
+    skip = (page - 1) * ITEMS_PER_PAGE
+    limit = ITEMS_PER_PAGE
+    places = pm.get_places(uid, skip, limit)
+    return jsonify(places), 200
 
 
 @places.route('search', methods=['GET'])
 def search():
-    country = request.args.get('c')
-    key = request.args.get('k')
-    places = pm.get_places()
-    return jsonify({'places': places}), 200
+    country = request.args.get('country')
+    key = request.args.get('key')
+    places = pm.get_places(1,0,10)
+    return jsonify(places), 200
 
 
 @places.route('<int:id>', methods=['GET'])
 def get_place_info(id):
-    info = pm.place_info(id)
+    uid = 1
+    info = pm.place_info(id, uid)
     info['rating'] = float(info['rating'])
     return jsonify(info), 200
 
@@ -63,19 +69,20 @@ def place_images(id):
         return jsonify({'message': 'image not provided'}), 403
 
 
-@places.route('<int:id>/comments/<int:page>')
-def get_comments(id, page):
+@places.route('<int:id>/comments')
+def get_comments(id):
+    page = int(request.args.get('page'))
     skip = (page - 1) * ITEMS_PER_PAGE
     limit = ITEMS_PER_PAGE
     comments = pm.get_place_comments(id, skip, limit)
     return jsonify(comments), 200
 
 
-@places.route('/visited', methods=['GET', 'POST'])
+@places.route('visited', methods=['GET', 'POST'])
 def visited():
     uid = 1
     if request.method == 'GET':
-        places = pm.visited_places(id)
+        places = pm.visited_places(uid)
         return jsonify(places), 200
     elif request.method == 'POST':
         pm.add_visit(request.json['pid'], uid)

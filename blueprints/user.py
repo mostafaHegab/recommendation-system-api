@@ -25,7 +25,7 @@ def user_info():
 allowed_image_extentions = ["JPEG", "JPG", "PNG"]
 
 
-@user.route('change_image', methods=['POST'])
+@user.route('change_image', methods=['PUT'])
 def change_image():
     id = 1
     if request.files:
@@ -50,7 +50,7 @@ def change_image():
 
 @user.route('change_password', methods=['PUT'])
 def change_user_password():
-    id = 1
+    id = 93098911820640
     newpassword = request.json['newpassword']
     oldpassword = request.json['oldpassword']
     user_pass = um.get_user_password(id)['password']
@@ -58,9 +58,6 @@ def change_user_password():
     # TASK- Compare to hashed password
     if not security.check_encrypted_password(oldpassword, user_pass):
         return make_response(jsonify({'message': 'Wrong Password'}), 406)
-
-    if user_pass != oldpassword:
-        return make_response(jsonify({'message': 'Password Too Similar To Old Password'}), 406)
 
     um.change_password(id, newpassword)
     return make_response(jsonify({'message': 'Password Changed'}), 200)

@@ -27,7 +27,5 @@ app.config['MAIL_USE_SSL'] = MAIL_CONFIG['ssl']
 
 if __name__ == "__main__":
     DB()
-    # DB.create_tables()
-    # DB.init_data()
     Mailer(app)
     app.run(port=3000, debug=True)

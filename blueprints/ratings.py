@@ -11,8 +11,8 @@ def add_new_rating():
     rm.add_rate(rate, pid ,uid)
     return make_response(jsonify({'message': 'rated'}), 201)
 
-@ratings.route('<id>', methods=['PUT'])
-def change_rating():
+@ratings.route('<int:id>', methods=['PUT'])
+def change_rating(id):
     uid = 1
     rate = request.json['rate']
     rm.edit_rate(id, rate)

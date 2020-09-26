@@ -5,7 +5,7 @@ comments = Blueprint('comments', __name__)
 
 @comments.route('', methods=['POST'])
 def add_new_comment():
-    uid = request.json['uid']
+    uid = 1
     pid = request.json['pid']
     time = request.json['time']
     comment = request.json['comment']
@@ -13,8 +13,8 @@ def add_new_comment():
     return make_response(jsonify({'message': 'comment added'}), 201)
 
 
-@comments.route('<id>', methods=['PUT', 'DELETE'])
-def change_comment():
+@comments.route('<int:id>', methods=['PUT', 'DELETE'])
+def change_comment(id):
     if request.method == 'PUT' :
         comment = request.json['comment']
         cm.edit_comment(id, comment)

@@ -1,11 +1,11 @@
 from .db import DB
 
-db = DB().db
+db = DB.db
 
 
 def user_info(id):
     c = db.cursor(dictionary=True)
-    c.execute(f'SELECT id, firstname, lastname, email, image FROM users WHERE id = {id}')
+    c.execute('SELECT id, firstname, lastname, email, image FROM users WHERE id = %s', (id,))
     res = c.fetchall()[0]
     c.close()
     return res
@@ -13,7 +13,9 @@ def user_info(id):
 
 def change_user_info(id, firstname, lastname):
     c = db.cursor()
-    c.execute(f'UPDATE users SET firstname = "{firstname}", lastname = "{lastname}" WHERE id = {id}')
+    c.execute('UPDATE users SET firstname = %s, lastname = %s WHERE id = %s',
+        (firstname, lastname, id)
+    )
     res = c.rowcount
     db.commit()
     c.close()
@@ -22,7 +24,7 @@ def change_user_info(id, firstname, lastname):
 
 def change_profile_image(id, image):
     c = db.cursor()
-    c.execute(f'UPDATE users SET image = "{image}" WHERE id = {id}')
+    c.execute('UPDATE users SET image = %s WHERE id = %s', (image, id))
     res = c.rowcount
     db.commit()
     c.close()
@@ -31,7 +33,7 @@ def change_profile_image(id, image):
 
 def change_password(id, password):
     c = db.cursor()
-    c.execute(f'UPDATE users SET password = "{password}" WHERE id = {id}')
+    c.execute('UPDATE users SET password = %s WHERE id = %s', (password, id))
     res = c.rowcount
     db.commit()
     c.close()
@@ -40,7 +42,7 @@ def change_password(id, password):
 
 def get_user_password(id):
     c = db.cursor(dictionary=True)
-    c.execute(f'SELECT password FROM users WHERE id ={id}')
+    c.execute('SELECT password FROM users WHERE id = %s', (id,))
     res = c.fetchall()[0]
     db.commit()
     c.close()

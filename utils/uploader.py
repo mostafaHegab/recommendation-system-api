@@ -9,10 +9,16 @@ def upload_image(image, name):
 
 
 def upload_user_image(image, name):
-    image.save(os.path.join(UPLOADS_IMAGES, 'users', name))
+    user_dir = os.path.join(UPLOADS_IMAGES, 'users')
+    if not os.path.exists(user_dir):
+        os.makedirs(user_dir)
+    image.save(os.path.join(user_dir, name))
     return 0
 
 
 def upload_place_image(image, pid, name):
-    image.save(os.path.join(UPLOADS_IMAGES, 'places', pid, name))
+    place_dir = os.path.join(UPLOADS_IMAGES, 'places', str(pid))
+    if not os.path.exists(place_dir):
+        os.makedirs(place_dir)
+    image.save(os.path.join(place_dir, name))
     return 0

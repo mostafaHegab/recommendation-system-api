@@ -6,10 +6,6 @@ DB_CONFIG = {
     'name': 'tourism'
 }
 
-JWT_SECRET_KEY = 'CSE2021 Graduation Project - Tourism APP'
-
-ITEMS_PER_PAGE = 20
-
 MAIL_CONFIG = {
     'server': 'smtp.gmail.com',
     'port': 465,
@@ -19,3 +15,10 @@ MAIL_CONFIG = {
     'ssl': True,
     'auth_mailer': 'makotak1412@gmail.com'
 }
+
+
+JWT_SECRET_KEY = 'CSE2021 Graduation Project - Tourism APP'
+ACCESS_TOKEN_EXPIRATION_OFFSET = 15 # minutes
+REFRESH_TOKEN_EXPIRATION_OFFSET = 15 # days
+
+ITEMS_PER_PAGE = 20

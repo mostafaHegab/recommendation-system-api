@@ -1,11 +1,12 @@
 from flask import Blueprint, jsonify, request, make_response
 import models.comments_model as cm
+from utils.guards import token_required
 
 comments = Blueprint('comments', __name__)
 
 @comments.route('', methods=['POST'])
-def add_new_comment():
-    uid = 1
+@token_required
+def add_new_comment(uid):
     pid = request.json['pid']
     time = request.json['time']
     comment = request.json['comment']
@@ -14,7 +15,8 @@ def add_new_comment():
 
 
 @comments.route('<int:id>', methods=['PUT', 'DELETE'])
-def change_comment(id):
+@token_required
+def change_comment(uid, id):
     if request.method == 'PUT' :
         comment = request.json['comment']
         cm.edit_comment(id, comment)
@@ -24,9 +26,3 @@ def change_comment(id):
         cm.delete_comment(id)
         return make_response(jsonify({'message': 'DELETED'}), 200)
     
-
-
-
-
-
-

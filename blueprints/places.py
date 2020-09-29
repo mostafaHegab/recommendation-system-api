@@ -3,12 +3,14 @@ import datetime
 import models.places_model as pm
 from utils.config import ITEMS_PER_PAGE
 from utils.uploader import upload_place_image
+from utils.guards import token_required
 
 places = Blueprint('places', __name__)
 
 
 @places.route('', methods=['POST'])
-def add_place():
+@token_required
+def add_place(uid):
     name = request.json['name']
     country = request.json['country']
     city = request.json['city']
@@ -20,8 +22,8 @@ def add_place():
 
 
 @places.route('rec', methods=['GET'])
-def get_recommendations():
-    uid = 1
+@token_required
+def get_recommendations(uid):
     page = int(request.args.get('page'))
     skip = (page - 1) * ITEMS_PER_PAGE
     limit = ITEMS_PER_PAGE
@@ -30,7 +32,8 @@ def get_recommendations():
 
 
 @places.route('search', methods=['GET'])
-def search():
+@token_required
+def search(uid):
     country = request.args.get('country')
     key = request.args.get('key')
     places = pm.get_places(1,0,10)
@@ -38,15 +41,16 @@ def search():
 
 
 @places.route('<int:id>', methods=['GET'])
-def get_place_info(id):
-    uid = 1
+@token_required
+def get_place_info(uid, id):
     info = pm.place_info(id, uid)
     info['rating'] = float(info['rating'])
     return jsonify(info), 200
 
 
 @places.route('<int:id>/images', methods=['GET', 'POST'])
-def place_images(id):
+@token_required
+def place_images(uid, id):
     if request.method == 'GET':
         images = pm.get_place_images(id)
         return jsonify(images), 200
@@ -70,7 +74,8 @@ def place_images(id):
 
 
 @places.route('<int:id>/comments')
-def get_comments(id):
+@token_required
+def get_comments(uid, id):
     page = int(request.args.get('page'))
     skip = (page - 1) * ITEMS_PER_PAGE
     limit = ITEMS_PER_PAGE
@@ -79,8 +84,8 @@ def get_comments(id):
 
 
 @places.route('visited', methods=['GET', 'POST'])
-def visited():
-    uid = 1
+@token_required
+def visited(uid):
     if request.method == 'GET':
         places = pm.visited_places(uid)
         return jsonify(places), 200
@@ -90,15 +95,15 @@ def visited():
 
 
 @places.route('visited/<int:pid>', methods=['DELETE'])
-def delete_visit(pid):
-    uid = 1
+@token_required
+def delete_visit(uid, pid):
     pm.delete_visit(pid, uid)
     return jsonify({'message': 'deleted'})
 
 
 @places.route('/fav', methods=['GET', 'POST'])
-def favorite():
-    uid = 1
+@token_required
+def favorite(uid):
     if request.method == 'GET':
         name = pm.favorits_places(uid)
         return jsonify(name), 200
@@ -108,7 +113,7 @@ def favorite():
 
 
 @places.route('/fav/<int:pid>', methods=['DELETE'])
-def delete_fav(pid):
-    uid = 1
+@token_required
+def delete_fav(uid, pid):
     pm.delete_favorit(pid, uid)
     return jsonify({'message': 'deleted'})

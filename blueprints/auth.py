@@ -72,6 +72,9 @@ def login():
     if user['verified'] != 0:
         return jsonify({'message': 'account not verified'}), 403
 
+    print(password)
+    print(user['password'])
+
     if not security.check_encrypted_password(password, user['password']):
         return jsonify({'message': 'wrong password'}), 406
 

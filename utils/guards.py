@@ -7,16 +7,15 @@ def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         token = None
-        if 'Authorization' in request.headers:
-            token = request.headers['Authorization']
+        if not 'Authorization' in request.headers:
+            return jsonify({'message': 'missing "Authorization" header'}), 403
+        token = request.headers['Authorization']
         if not token:
             return jsonify({'message': 'token is missing'}), 401
         try:
             data = jwt.decode(token, JWT_SECRET_KEY)
-        except jwt.ExpiredSignatureError:
-            return jsonify({'message': 'token is expired'}), 403
         except:
-            return jsonify({'message': 'invalid refresh token'}), 403
+            return jsonify({'message': 'invalid or expired token'}), 403
 
         return f(data['uid'], *args, **kwargs)
     return decorator

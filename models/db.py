@@ -14,9 +14,17 @@ class DB:
         )
 
     def __init__(self):
-        print(DB.db)
-        if DB.create_tables() != 0:
+        if len(DB.get_tables()) == 0:
+            DB.create_tables()
             DB.init_data()
+
+    @staticmethod
+    def get_tables():
+        c = DB.db.cursor()
+        c.execute('SHOW TABLES')
+        tables = c.fetchall()
+        c.close()
+        return tables
 
     @staticmethod
     def create_tables():
@@ -24,9 +32,7 @@ class DB:
         for line in open('models/create_tables.sql'):
             if len(line) != 1:
                 c.execute(line)
-        result = c.rowcount
         c.close()
-        return result
 
     @staticmethod
     def init_data():

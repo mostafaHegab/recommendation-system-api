@@ -1,6 +1,6 @@
 import os
 
-UPLOADS_IMAGES = os.path.join(os.path.abspath(os.curdir), 'uploads')
+UPLOADS_IMAGES = os.path.join(os.path.abspath(os.curdir), 'images')
 
 
 def upload_image(image, name):

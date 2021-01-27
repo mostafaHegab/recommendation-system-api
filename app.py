@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 
 from blueprints.auth import auth
 from blueprints.places import places
@@ -10,13 +10,16 @@ from models.db import DB
 from utils.mailer import Mailer
 from utils.config import MAIL_CONFIG
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 app.register_blueprint(auth, url_prefix='/api/auth')
 app.register_blueprint(places, url_prefix='/api/places')
 app.register_blueprint(comments, url_prefix='/api/comments')
 app.register_blueprint(user, url_prefix='/api/user')
 app.register_blueprint(ratings, url_prefix='/api/ratings')
+@app.route('/images/<path:path>')
+def send_images(path):
+    return send_from_directory('images', path)
 
 app.config['MAIL_SERVER'] = MAIL_CONFIG['server']
 app.config['MAIL_PORT'] = MAIL_CONFIG['port']

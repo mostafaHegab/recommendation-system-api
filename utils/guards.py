@@ -8,7 +8,7 @@ def token_required(f):
     def decorator(*args, **kwargs):
         token = None
         if not 'Authorization' in request.headers:
-            return jsonify({'message': 'missing "Authorization" header'}), 403
+            return jsonify({'message': 'missing "Authorization" header'}), 401
         token = request.headers['Authorization']
         if not token:
             return jsonify({'message': 'token is missing'}), 401

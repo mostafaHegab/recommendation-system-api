@@ -16,7 +16,6 @@ def add_place(uid):
     city = request.json['city']
     lat = request.json['lat']
     lng = request.json['lng']
-    description = request.json['description']
     id = pm.add_place(name, country, city, lat, lng)
     return jsonify({'pid': id}), 201
 

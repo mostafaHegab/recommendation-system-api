@@ -13,7 +13,7 @@ def token_required(f):
         if not token:
             return jsonify({'message': 'token is missing'}), 401
         try:
-            data = jwt.decode(token, JWT_SECRET_KEY)
+            data = jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
         except:
             return jsonify({'message': 'invalid or expired token'}), 403
 

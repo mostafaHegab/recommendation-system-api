@@ -54,11 +54,11 @@ def verify():
 
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
-        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
+        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
-    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
-    return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
-                    'refresh_token': refresh_token.decode('UTF-8'), 'refresh_token_exp': refresh_token_exp}), 200
+    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+    return jsonify({'access_token': access_token, 'access_token_exp': access_token_exp,
+                    'refresh_token': refresh_token, 'refresh_token_exp': refresh_token_exp}), 200
 
 
 @auth.route('login', methods=['POST'])
@@ -80,11 +80,11 @@ def login():
 
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
-        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY)
+        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
-    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
-    return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
-                    'refresh_token': refresh_token.decode('UTF-8'), 'refresh_token_exp': refresh_token_exp}), 200
+    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+    return jsonify({'access_token': access_token, 'access_token_exp': access_token_exp,
+                    'refresh_token': refresh_token, 'refresh_token_exp': refresh_token_exp}), 200
 
 
 @auth.route('send_reset_code', methods=['POST'])
@@ -127,17 +127,17 @@ def refresh_token():
     old_token = request.json['old_token']
     refresh_token = request.json['refresh_token']
     try:
-        jwt.decode(refresh_token, JWT_SECRET_KEY)
+        jwt.decode(refresh_token, JWT_SECRET_KEY, algorithms=['HS256'])
     except jwt.ExpiredSignatureError:
         return jsonify({'message': 'refresh token is expired'}), 403
     except:
         return jsonify({'message': 'invalid refresh token'}), 403
 
-    uid = jwt.decode(old_token, JWT_SECRET_KEY, verify=False)['uid']
+    uid = jwt.decode(old_token, JWT_SECRET_KEY, algorithms=['HS256'], verify=False)['uid']
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
-        {'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY)
+        {'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
-    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY)
-    return jsonify({'access_token': access_token.decode('UTF-8'), 'access_token_exp': access_token_exp,
-                    'refresh_token': refresh_token.decode('UTF-8'), 'refresh_token_exp': refresh_token_exp}), 200
+    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+    return jsonify({'access_token': access_token, 'access_token_exp': access_token_exp,
+                    'refresh_token': refresh_token, 'refresh_token_exp': refresh_token_exp}), 200

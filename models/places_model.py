@@ -54,7 +54,7 @@ def add_place_image(pid, name):
 def get_place_comments(pid, skip, limit):
     c = db.cursor(dictionary=True)
     c.execute('SELECT comments.id AS comment_id, comments.text, comments.time, users.id AS user_id, CONCAT(users.firstname, " ", users.lastname) AS username, users.image AS user_image, ratings.rate AS rate\
-    FROM comments INNER JOIN users ON comments.pid = %s and users.id = comments.uid INNER JOIN ratings ON ratings.pid = 1 and ratings.uid = comments.uid ORDER BY comments.time DESC LIMIT %s, %s',
+    FROM comments INNER JOIN users ON comments.pid = %s and users.id = comments.uid LEFT JOIN ratings ON ratings.pid = 1 and ratings.uid = comments.uid ORDER BY comments.time DESC LIMIT %s, %s',
         (pid, skip, limit)
     )
     res = c.fetchall()

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, make_response
 import models.comments_model as cm
 from utils.guards import token_required
+import datetime
 
 comments = Blueprint('comments', __name__)
 
@@ -8,8 +9,8 @@ comments = Blueprint('comments', __name__)
 @token_required
 def add_new_comment(uid):
     pid = request.json['pid']
-    time = request.json['time']
     comment = request.json['comment']
+    time = datetime.datetime.utcnow()
     cm.add_comment(comment, time, pid, uid)
     return make_response(jsonify({'message': 'comment added'}), 201)
 

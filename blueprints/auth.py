@@ -54,9 +54,9 @@ def verify():
 
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
-        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256').decode()
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
-    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256').decode()
     return jsonify({'access_token': access_token, 'access_token_exp': access_token_exp,
                     'refresh_token': refresh_token, 'refresh_token_exp': refresh_token_exp}), 200
 
@@ -80,9 +80,9 @@ def login():
 
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
-        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+        {'uid': user['id'], 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256').decode()
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
-    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256').decode()
     return jsonify({'access_token': access_token, 'access_token_exp': access_token_exp,
                     'refresh_token': refresh_token, 'refresh_token_exp': refresh_token_exp}), 200
 
@@ -136,8 +136,8 @@ def refresh_token():
     uid = jwt.decode(old_token, JWT_SECRET_KEY, algorithms=['HS256'], verify=False)['uid']
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
-        {'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+        {'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256').decode()
     refresh_token_exp = datetime.datetime.utcnow() + datetime.timedelta(days=REFRESH_TOKEN_EXPIRATION_OFFSET)
-    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256')
+    refresh_token = jwt.encode({'exp': refresh_token_exp}, JWT_SECRET_KEY, algorithm='HS256').decode()
     return jsonify({'access_token': access_token, 'access_token_exp': access_token_exp,
                     'refresh_token': refresh_token, 'refresh_token_exp': refresh_token_exp}), 200

@@ -12,5 +12,3 @@ flask-mail = "*"
 passlib = "*"
 pyjwt = "*"
 
-[requires]
-python_version = "3.7"

@@ -24,16 +24,16 @@ def signup():
 
     hashed_password = security.encrypt_password(password)
 
-    verify_code = randint(1000, 9999)
+    verify_code = 0 # randint(1000, 9999)
     am.create_user(firstname, lastname, email,
                    hashed_password, verify_code, 'user.png')
 
-    email_body = f'''
-        please use the below code to verify your email
-        {verify_code}
-    '''
-    Mailer.send_email('Email Verification', email_body,
-                      MAIL_CONFIG['auth_mailer'], email)
+    # email_body = f'''
+    #     please use the below code to verify your email
+    #     {verify_code}
+    # '''
+    # Mailer.send_email('Email Verification', email_body,
+    #                   MAIL_CONFIG['auth_mailer'], email)
 
     return jsonify({'message': 'account created'}), 201
 
@@ -71,9 +71,6 @@ def login():
     user = users[0]
     if user['verified'] != 0:
         return jsonify({'message': 'account not verified'}), 403
-
-    print(password)
-    print(user['password'])
 
     if not security.check_encrypted_password(password, user['password']):
         return jsonify({'message': 'wrong password'}), 406
@@ -133,7 +130,7 @@ def refresh_token():
     except:
         return jsonify({'message': 'invalid refresh token'}), 403
 
-    uid = jwt.decode(old_token, JWT_SECRET_KEY, algorithms=['HS256'], verify=False)['uid']
+    uid = jwt.decode(old_token, JWT_SECRET_KEY, algorithms=['HS256'], options={'verify_exp': False})['uid']
     access_token_exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRATION_OFFSET)
     access_token = jwt.encode(
         {'uid': uid, 'exp': access_token_exp}, JWT_SECRET_KEY, algorithm='HS256')

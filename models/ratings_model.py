@@ -1,30 +1,34 @@
 from .db import DB
-db = DB.db
-
 
 def get_rate(uid, pid):
-    c = db.cursor(dictionary=True)
+    conn = DB.get_connection()
+    c = conn.cursor(dictionary=True)
     c.execute(
         'SELECT rate FROM ratings WHERE uid = %s AND pid = %s', (uid, pid))
     res = c.fetchone()
     c.close()
+    conn.close()
     return res
 
 def add_rate(uid, pid, rate):
+    conn = DB.get_connection()
     id = DB.generate_random_id()
-    c = db.cursor()
+    c = conn.cursor()
     c.execute(
         'INSERT INTO ratings (id, rate, pid, uid) values (%s, %s, %s, %s)', (id, rate, pid, uid))
     res = c.rowcount
-    db.commit()
+    conn.commit()
     c.close()
+    conn.close()
     return res
 
 
 def edit_rate(uid, pid, rate):
-    c = db.cursor()
+    conn = DB.get_connection()
+    c = conn.cursor()
     c.execute('UPDATE ratings SET rate = %s WHERE uid = %s AND pid = %s', (rate, uid, pid))
     res = c.rowcount
-    db.commit()
+    conn.commit()
     c.close()
+    conn.close()
     return res

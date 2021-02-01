@@ -5,7 +5,15 @@ import mysql.connector
 from utils.config import DB_CONFIG
 
 class DB:
-    db = mysql.connector.connect(
+
+    def __init__(self):
+        if len(DB.get_tables()) == 0:
+            DB.create_tables()
+            DB.init_data()
+    
+    @staticmethod
+    def get_connection():
+        return mysql.connector.connect(
             host=DB_CONFIG['host'],
             port=DB_CONFIG['port'],
             user=DB_CONFIG['user'],
@@ -13,35 +21,36 @@ class DB:
             database=DB_CONFIG['name']
         )
 
-    def __init__(self):
-        if len(DB.get_tables()) == 0:
-            DB.create_tables()
-            DB.init_data()
-
     @staticmethod
     def get_tables():
-        c = DB.db.cursor()
+        conn = DB.get_connection()
+        c = conn.cursor()
         c.execute('SHOW TABLES')
         tables = c.fetchall()
         c.close()
+        conn.close()
         return tables
 
     @staticmethod
     def create_tables():
-        c = DB.db.cursor()
+        conn = DB.get_connection()
+        c = con.cursor()
         for line in open('models/create_tables.sql'):
             if len(line) != 1:
                 c.execute(line)
         c.close()
+        conn.close()
 
     @staticmethod
     def init_data():
-        c = DB.db.cursor()
+        conn = DB.get_connection()
+        c = conn.cursor()
         for line in open('models/init_data.sql'):
             if len(line) != 1:
                 c.execute(line)
-        DB.db.commit()
+        conn.commit()
         c.close()
+        conn.close()
 
     @staticmethod
     def generate_random_id():

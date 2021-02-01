@@ -15,7 +15,7 @@ def token_required(f):
         try:
             data = jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
         except:
-            return jsonify({'message': 'invalid or expired token'}), 403
+            return jsonify({'message': 'invalid or expired token'}), 401
 
         return f(data['uid'], *args, **kwargs)
     return decorator

@@ -109,10 +109,10 @@ def delete_visit(pid, uid):
 
 
 def favorits_places(uid):
+    print(uid)
     conn = DB.get_connection()
     c = conn.cursor(dictionary=True)
-    c.execute('SELECT places.id, places.name, images.name AS image FROM favorites INNER JOIN places ON favorites.uid = %s AND places.id = favorites.pid,\
-    images WHERE images.pid = places.id GROUP BY places.id',
+    c.execute('SELECT places.id, places.name, (SELECT images.name FROM images WHERE images.pid = places.id GROUP BY places.id) AS image, (SELECT AVG(rate) FROM ratings WHERE pid = places.id) AS rating FROM favorites INNER JOIN places ON favorites.uid = %s AND places.id = favorites.pid',
         (uid,)
     )
     res = c.fetchall()

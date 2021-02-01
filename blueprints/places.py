@@ -104,8 +104,10 @@ def delete_visit(uid, pid):
 @token_required
 def favorite(uid):
     if request.method == 'GET':
-        name = pm.favorits_places(uid)
-        return jsonify(name), 200
+        result = pm.favorits_places(uid)
+        for p in result:
+            p['rating'] = float(p['rating'])
+        return jsonify(result), 200
     elif request.method == 'POST':
         pm.add_favorit(request.json['pid'], uid)
         return jsonify({'message': 'added'}), 201

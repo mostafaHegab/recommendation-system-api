@@ -1,10 +1,10 @@
 from flask import Flask, send_from_directory
 
-from blueprints.auth import auth
-from blueprints.places import places
-from blueprints.comments import comments
-from blueprints.user import user
-from blueprints.ratings import ratings
+from blueprints.auth_blueprint import auth
+from blueprints.products_blueprint import products
+from blueprints.comments_blueprint import comments
+from blueprints.user_blueprint import user
+from blueprints.ratings_blueprint import ratings
 
 from models.db import DB
 from utils.mailer import Mailer
@@ -13,7 +13,7 @@ from utils.config import MAIL_CONFIG
 app = Flask(__name__, static_url_path='')
 
 app.register_blueprint(auth, url_prefix='/api/auth')
-app.register_blueprint(places, url_prefix='/api/places')
+app.register_blueprint(products, url_prefix='/api/products')
 app.register_blueprint(comments, url_prefix='/api/comments')
 app.register_blueprint(user, url_prefix='/api/user')
 app.register_blueprint(ratings, url_prefix='/api/ratings')

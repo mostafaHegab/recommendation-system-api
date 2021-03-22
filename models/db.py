@@ -34,7 +34,7 @@ class DB:
     @staticmethod
     def create_tables():
         conn = DB.get_connection()
-        c = con.cursor()
+        c = conn.cursor()
         for line in open('models/create_tables.sql'):
             if len(line) != 1:
                 c.execute(line)

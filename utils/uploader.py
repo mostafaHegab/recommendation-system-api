@@ -16,8 +16,8 @@ def upload_user_image(image, name):
     return 0
 
 
-def upload_place_image(image, pid, name):
-    place_dir = os.path.join(UPLOADS_IMAGES, 'places', str(pid))
+def upload_product_image(image, pid, name):
+    place_dir = os.path.join(UPLOADS_IMAGES, 'products')
     if not os.path.exists(place_dir):
         os.makedirs(place_dir)
     image.save(os.path.join(place_dir, name))

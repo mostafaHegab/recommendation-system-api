@@ -3,7 +3,7 @@ DB_CONFIG = {
     'port': 3306,
     'user': 'root',
     'password': 'root',
-    'name': 'tourism'
+    'name': 'grad_proj'
 }
 
 MAIL_CONFIG = {
@@ -17,8 +17,8 @@ MAIL_CONFIG = {
 }
 
 
-JWT_SECRET_KEY = 'CSE2021 Graduation Project - Tourism APP'
-ACCESS_TOKEN_EXPIRATION_OFFSET = 15 # minutes
+JWT_SECRET_KEY = 'CSE2021 Graduation Project - Recommendation System APP'
+ACCESS_TOKEN_EXPIRATION_OFFSET = 15*24*60 # minutes
 REFRESH_TOKEN_EXPIRATION_OFFSET = 15 # days
 
 ITEMS_PER_PAGE = 20

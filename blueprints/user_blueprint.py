@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, make_response
 import models.users_model as um
 from werkzeug.utils import secure_filename
 from utils.uploader import upload_user_image
+import datetime
 
 from utils import security
 from utils.guards import token_required
@@ -42,7 +43,7 @@ def change_image(id):
             return jsonify({'message': 'unacceptable extension'}), 403
 
         filename = secure_filename(image.filename)
-        newfilename = str(id) + "." + (filename.rsplit(".", 1)[1])
+        newfilename = f'{int(datetime.datetime.now().timestamp())}-{id}.{ext}'
         upload_user_image(image, newfilename)
         um.change_profile_image(id, newfilename)
         return make_response(jsonify({'message': 'Profile Picture Changed'}), 200)

@@ -9,9 +9,8 @@ ratings = Blueprint('ratings', __name__)
 def handle_ratings(uid, id):
     if request.method == 'GET':
         res = rm.get_rate(uid, id)
-        print(res)
         if res == None:
-            return jsonify({'rate': None})
+            return jsonify({'rate': 0})
         else:
             return jsonify(res)
     elif request.method == 'POST':

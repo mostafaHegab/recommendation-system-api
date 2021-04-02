@@ -64,7 +64,7 @@ def get_comments(pid, skip, limit):
 def get_favorits(uid):
     conn = DB.get_connection()
     c = conn.cursor(dictionary=True)
-    c.execute('SELECT products.id, products.name, products.image, (SELECT AVG(rate) FROM ratings WHERE pid = products.id) AS rating FROM favorites INNER JOIN products ON favorites.uid = %s AND products.id = favorites.pid',
+    c.execute('SELECT products.id, products.name, products.image, CAST((SELECT AVG(rate) FROM ratings WHERE pid = products.id) AS FLOAT) AS rating FROM favorites INNER JOIN products ON favorites.uid = %s AND products.id = favorites.pid',
         (uid,)
     )
     res = c.fetchall()

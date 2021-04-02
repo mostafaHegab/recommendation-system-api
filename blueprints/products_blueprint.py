@@ -19,7 +19,10 @@ def get_recommendations(uid):
 @token_required
 def get_product_info(uid, id):
     info = pm.product_info(id, uid)
-    info['rating'] = float(info['rating'])
+    if info['rating']:
+        info['rating'] = float(info['rating'])
+    else:
+        info['rating'] = 0
     return jsonify(info), 200
 
 
@@ -63,8 +66,6 @@ def get_comments(uid, id):
 def favorite(uid):
     if request.method == 'GET':
         result = pm.get_favorits(uid)
-        for p in result:
-            p['rating'] = float(p['rating'])
         return jsonify(result), 200
     elif request.method == 'POST':
         pm.add_favorit(request.json['pid'], uid)

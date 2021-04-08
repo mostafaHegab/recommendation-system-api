@@ -11,4 +11,7 @@ mysql-connector-python = "*"
 flask-mail = "*"
 passlib = "*"
 pyjwt = "*"
-
+pandas = "*"
+py2neo = "*"
+nltk = "*"
+sklearn = "*"

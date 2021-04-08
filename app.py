@@ -10,6 +10,8 @@ from models.db import DB
 from utils.mailer import Mailer
 from utils.config import MAIL_CONFIG
 
+from joblib import dump, load
+
 app = Flask(__name__, static_url_path='')
 
 app.register_blueprint(auth, url_prefix='/api/auth')
@@ -35,5 +37,6 @@ app.config['MAIL_USE_SSL'] = MAIL_CONFIG['ssl']
 
 if __name__ == "__main__":
     DB()
-    Mailer(app)
+    # Mailer(app)
     app.run(host='0.0.0.0', port=5000, threaded=True, debug=True)
+    

@@ -1,8 +1,10 @@
 import datetime
 from random import randint, shuffle
+import pandas as pd
 
 import mysql.connector
-from utils.config import DB_CONFIG
+from py2neo import Graph
+from utils.config import DB_CONFIG, NEO4J_CONFIG
 
 class DB:
 
@@ -10,6 +12,10 @@ class DB:
         if len(DB.get_tables()) == 0:
             DB.create_tables()
             DB.init_data()
+            try:
+                DB.init_neo4j_data()
+            except:
+                print('unable to connect to neo4j')
     
     @staticmethod
     def get_connection():
@@ -20,6 +26,10 @@ class DB:
             password=DB_CONFIG['password'],
             database=DB_CONFIG['name']
         )
+
+    @staticmethod
+    def get_neo4j_connection():
+        return Graph(NEO4J_CONFIG['url'], password = NEO4J_CONFIG['password'])
 
     @staticmethod
     def get_tables():
@@ -45,12 +55,45 @@ class DB:
     def init_data():
         conn = DB.get_connection()
         c = conn.cursor()
-        for line in open('models/init_data.sql'):
-            if len(line) != 1:
-                c.execute(line)
+        c.execute('INSERT INTO users (id, firstname, lastname, email, password, verified) VALUES (0, "graduation", "project", "g@p.com", "graduation project", 1)')
+        data = pd.read_csv('models/movies_data.csv')
+        for i in range(data.shape[0]):
+            row = data.iloc[i]
+            c.execute('INSERT INTO products (id, name, description, image, tags) VALUES (%s,%s,%s,%s,%s)',
+            (i, row['original_title'], row['description'], row['poster_url'], row['genre'][1:-1]))
+            c.execute('INSERT INTO ratings (id, rate, pid, uid) VALUES (%s, %s, %s,%s)',
+            (i, row['avg_vote']/2, i, 0))
         conn.commit()
         c.close()
         conn.close()
+
+    @staticmethod
+    def init_neo4j_data():
+        g = DB.get_neo4j_connection()
+        g.run('MATCH (n) DETACH DELETE n')
+        tags = ['music', 'crime', 'mystery', 'western', 'fantasy', 'thriller', 'animation', 'reality-tv', 'adventure', 'action', 'sport', 'drama', 'adult', 'sci-fi', 'family', 'documentary', 'history', 'musical', 'romance', 'biography', 'film-noir', 'news', 'comedy', 'horror', 'war']
+        for i in range(len(tags)):
+            g.run(f"CREATE (n:Tag{{name: $name, id: $id}})", {
+                "name": tags[i],
+                "id": i
+            })
+        data = pd.read_csv('models/movies_data.csv')
+        data['genre_ids'] = data['genre_ids'].apply(eval)
+        for i in range(data.shape[0]):
+            row = data.iloc[i]
+            g.run(f'''
+                CREATE (n:Product{{id: $id, name: $name, description: $desc, image: $image, rating: $rate}})
+                WITH n
+                MATCH (t: Tag) WHERE t.id IN $tags
+                MERGE (n)-[:HAS_TAG]->(t)
+            ''', {
+                "id": i,
+                "name": row['original_title'],
+                "desc": row['description'],
+                "image": row['poster_url'],
+                "rate": row['avg_vote']/2,
+                "tags": row['genre_ids']
+            })
 
     @staticmethod
     def generate_random_id():

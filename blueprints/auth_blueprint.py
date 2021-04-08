@@ -32,8 +32,7 @@ def signup():
     #     please use the below code to verify your email
     #     {verify_code}
     # '''
-    # Mailer.send_email('Email Verification', email_body,
-    #                   MAIL_CONFIG['auth_mailer'], email)
+    # Mailer.send_email(subject='Email Verification', body=email_body, reciever=email)
 
     return jsonify({'message': 'account created'}), 201
 
@@ -97,8 +96,7 @@ def send_reset_code():
             please use the below code to reset your password
             {code}
         '''
-    Mailer.send_email('Email Verification', email_body,
-                      MAIL_CONFIG['auth_mailer'], email)
+    Mailer.send_email(subject='Email Verification', body=email_body, reciever=email)
 
     return jsonify({'message': 'code sent'}), 200
 

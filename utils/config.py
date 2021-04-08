@@ -6,19 +6,23 @@ DB_CONFIG = {
     'name': 'grad_proj'
 }
 
+NEO4J_CONFIG = {
+    'url': "bolt://localhost:7687",
+    'password': 'admin'
+}
+
 MAIL_CONFIG = {
-    'server': 'smtp.gmail.com',
-    'port': 465,
-    'username': 'makotak1412@gmail.com',
-    'password': 'sasa_hegab',
-    'tls': False,
-    'ssl': True,
-    'auth_mailer': 'makotak1412@gmail.com'
+    'server': 'smtp.mailtrap.io',
+    'port': 2525,
+    'username': 'e6cb3362b9b824',
+    'password': 'bcd9362e97c8fa',
+    'tls': True,
+    'ssl': False
 }
 
 
 JWT_SECRET_KEY = 'CSE2021 Graduation Project - Recommendation System APP'
-ACCESS_TOKEN_EXPIRATION_OFFSET = 15*24*60 # minutes
+ACCESS_TOKEN_EXPIRATION_OFFSET = 365*24*60 # minutes
 REFRESH_TOKEN_EXPIRATION_OFFSET = 15 # days
 
-ITEMS_PER_PAGE = 20
+ITEMS_PER_PAGE = 10

@@ -8,6 +8,6 @@ class Mailer():
         print(Mailer.mail)
 
     @staticmethod
-    def send_email(subject, body, sender, reciever):
-        msg = Message(subject=subject, body=body, sender=sender, recipients=[reciever])
+    def send_email(subject, body, reciever):
+        msg = Message(subject=subject, body=body, recipients=[reciever])
         return Mailer.mail.send(msg)

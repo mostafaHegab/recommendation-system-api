@@ -10,8 +10,6 @@ from models.db import DB
 from utils.mailer import Mailer
 from utils.config import MAIL_CONFIG
 
-from joblib import dump, load
-
 app = Flask(__name__, static_url_path='')
 
 app.register_blueprint(auth, url_prefix='/api/auth')

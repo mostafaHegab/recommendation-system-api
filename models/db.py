@@ -12,10 +12,7 @@ class DB:
         if len(DB.get_tables()) == 0:
             DB.create_tables()
             DB.init_data()
-            try:
-                DB.init_neo4j_data()
-            except:
-                print('unable to connect to neo4j')
+            DB.init_neo4j_data()
     
     @staticmethod
     def get_connection():

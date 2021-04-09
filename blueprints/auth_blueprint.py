@@ -24,7 +24,7 @@ def signup():
 
     hashed_password = security.encrypt_password(password)
 
-    verify_code = 1 # randint(1000, 9999)
+    verify_code = 0 # randint(1000, 9999)
     am.create_user(firstname, lastname, email,
                    hashed_password, verify_code, 'user.png')
 

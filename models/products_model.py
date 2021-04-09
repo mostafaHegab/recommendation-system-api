@@ -1,5 +1,9 @@
 from .db import DB
+from utils.recommender import Recommender
 
+
+def get_recommendations(uid, skip, limit):
+    return Recommender.get_recommendations()
 
 def get_products(uid, skip, limit):
     conn = DB.get_connection()
@@ -73,24 +77,26 @@ def get_favorits(uid):
     return res
 
 
-def add_favorit(pid, uid):
+def add_favorit(uid, pid):
     conn = DB.get_connection()
     id = DB.generate_random_id()
     c = conn.cursor()
-    c.execute('INSERT INTO favorites (id, pid, uid) VALUES (%s, %s, %s)', (id, pid, uid))
+    c.execute('INSERT INTO favorites (id, uid, pid) VALUES (%s, %s, %s)', (id, uid, pid))
     res = c.rowcount
     conn.commit()
     c.close()
     conn.close()
+    Recommender.increase_user_score(uid, pid)
     return res
 
 
-def delete_favorit(pid, uid):
+def delete_favorit(uid, pid):
     conn = DB.get_connection()
     c = conn.cursor()
-    c.execute('DELETE FROM favorites WHERE pid = %s and uid = %s', (pid, uid))
+    c.execute('DELETE FROM favorites WHERE pid = %s and uid = %s', (uid, pid))
     res = c.rowcount
     conn.commit()
     c.close()
     conn.close()
+    Recommender.decrease_user_score(uid, pid)
     return res

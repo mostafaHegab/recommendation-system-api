@@ -56,10 +56,11 @@ class DB:
         data = pd.read_csv('models/movies_data.csv')
         for i in range(data.shape[0]):
             row = data.iloc[i]
+            print(f'adding {i}/{data.shape[0]} - {row["imdb_title_id"]}')
             c.execute('INSERT INTO products (id, name, description, image, tags) VALUES (%s,%s,%s,%s,%s)',
             (i, row['original_title'], row['description'], row['poster_url'], row['genre'][1:-1]))
             c.execute('INSERT INTO ratings (id, rate, pid, uid) VALUES (%s, %s, %s,%s)',
-            (i, row['avg_vote']/2, i, 0))
+            (i, float(row['avg_vote']/2), i, 0))
         conn.commit()
         c.close()
         conn.close()
@@ -78,6 +79,7 @@ class DB:
         data['genre_ids'] = data['genre_ids'].apply(eval)
         for i in range(data.shape[0]):
             row = data.iloc[i]
+            print(f'adding {i}/{data.shape[0]} - {row["imdb_title_id"]}')
             g.run(f'''
                 CREATE (n:Product{{id: $id, name: $name, description: $desc, image: $image, rating: $rate}})
                 WITH n
@@ -88,7 +90,7 @@ class DB:
                 "name": row['original_title'],
                 "desc": row['description'],
                 "image": row['poster_url'],
-                "rate": row['avg_vote']/2,
+                "rate": float(row['avg_vote']/2),
                 "tags": row['genre_ids']
             })
 

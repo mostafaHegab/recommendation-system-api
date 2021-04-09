@@ -1,4 +1,5 @@
 from .db import DB
+from utils.recommender import Recommender
 
 def get_rate(uid, pid):
     conn = DB.get_connection()
@@ -20,6 +21,8 @@ def add_rate(uid, pid, rate):
     conn.commit()
     c.close()
     conn.close()
+    if rate > 2:
+        Recommender.increase_user_score(uid, pid)
     return res
 
 

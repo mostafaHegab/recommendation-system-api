@@ -12,7 +12,7 @@ products = Blueprint('products', __name__)
 def get_recommendations(uid):
     page = int(request.args.get('page'))
     skip = (page - 1) * ITEMS_PER_PAGE
-    places = pm.get_products(uid, skip, ITEMS_PER_PAGE)
+    places = pm.get_recommendations(uid, skip, ITEMS_PER_PAGE)
     return jsonify(places), 200
 
 @products.route('<int:id>', methods=['GET'])
@@ -68,12 +68,12 @@ def favorite(uid):
         result = pm.get_favorits(uid)
         return jsonify(result), 200
     elif request.method == 'POST':
-        pm.add_favorit(request.json['pid'], uid)
+        pm.add_favorit(uid, request.json['pid'])
         return jsonify({'message': 'added'}), 201
 
 
 @products.route('/fav/<int:pid>', methods=['DELETE'])
 @token_required
 def delete_fav(uid, pid):
-    pm.delete_favorit(pid, uid)
+    pm.delete_favorit(uid, pid)
     return jsonify({'message': 'deleted'})

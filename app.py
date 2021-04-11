@@ -18,13 +18,16 @@ app.register_blueprint(comments, url_prefix='/api/comments')
 app.register_blueprint(user, url_prefix='/api/user')
 app.register_blueprint(ratings, url_prefix='/api/ratings')
 
+
 @app.route('/')
 def index():
     return 'Hello CSE 2021 Graduation Project'
 
+
 @app.route('/images/<path:path>')
 def send_images(path):
     return send_from_directory('images', path)
+
 
 app.config['MAIL_SERVER'] = MAIL_CONFIG['server']
 app.config['MAIL_PORT'] = MAIL_CONFIG['port']
@@ -37,4 +40,3 @@ if __name__ == "__main__":
     DB()
     # Mailer(app)
     app.run(host='0.0.0.0', port=5000, threaded=True, debug=True)
-    

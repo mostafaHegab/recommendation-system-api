@@ -1,5 +1,6 @@
 from .db import DB
 
+
 def create_user(firstname, lastname, email, password, verified, image):
     id = DB.generate_random_id()
     conn = DB.get_connection()
@@ -14,13 +15,15 @@ def create_user(firstname, lastname, email, password, verified, image):
     conn.close()
     neo_g = DB.get_neo4j_connection()
     neo_g.run(f'''
-                CREATE (n:User{{id: $id}})
-                WITH n
-                MATCH (t: Tag)
-                MERGE (n)-[:FOLLOWS{{score: 1}}]->(t)
+                CREATE (u:User{{id:$id}})
+                UNION
+                MATCH (p:Product), (u:User{{id:$id}})
+                WITH p,u
+                ORDER BY p.pscore DESC LIMIT 10
+                MERGE (u) -[:REACT{{score:1}}]- (p)
             ''', {
-                "id": id
-            })
+        "id": id
+    })
     return res
 
 
@@ -79,7 +82,8 @@ def get_reset_code(email):
 def reset_password(id, password):
     conn = DB.get_connection()
     c = conn.cursor()
-    c.execute('UPDATE users SET password = %s, reset_code = 0 WHERE id = %s', (password, id))
+    c.execute(
+        'UPDATE users SET password = %s, reset_code = 0 WHERE id = %s', (password, id))
     res = c.rowcount
     conn.commit()
     c.close()

@@ -1,6 +1,7 @@
 from .db import DB
 from utils.recommender import Recommender
 
+
 def get_rate(uid, pid):
     conn = DB.get_connection()
     c = conn.cursor(dictionary=True)
@@ -10,6 +11,7 @@ def get_rate(uid, pid):
     c.close()
     conn.close()
     return res
+
 
 def add_rate(uid, pid, rate):
     conn = DB.get_connection()
@@ -21,17 +23,24 @@ def add_rate(uid, pid, rate):
     conn.commit()
     c.close()
     conn.close()
-    if rate > 2:
-        Recommender.increase_user_score(uid, pid)
+    if rate > 3:
+        Recommender.increase_score(uid, pid)
+    else:
+        Recommender.decrease_score(uid, pid)
     return res
 
 
 def edit_rate(uid, pid, rate):
     conn = DB.get_connection()
     c = conn.cursor()
-    c.execute('UPDATE ratings SET rate = %s WHERE uid = %s AND pid = %s', (rate, uid, pid))
+    c.execute(
+        'UPDATE ratings SET rate = %s WHERE uid = %s AND pid = %s', (rate, uid, pid))
     res = c.rowcount
     conn.commit()
     c.close()
     conn.close()
+    if rate > 3:
+        Recommender.increase_score(uid, pid)
+    else:
+        Recommender.decrease_score(uid, pid)
     return res

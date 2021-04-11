@@ -7,18 +7,20 @@ from utils.guards import token_required
 
 products = Blueprint('products', __name__)
 
+
 @products.route('rec', methods=['GET'])
 @token_required
 def get_recommendations(uid):
     page = int(request.args.get('page'))
     skip = (page - 1) * ITEMS_PER_PAGE
-    places = pm.get_recommendations(uid, skip, ITEMS_PER_PAGE)
-    return jsonify(places), 200
+    recs = pm.get_recommendations(uid, skip, ITEMS_PER_PAGE)
+    return jsonify(recs), 200
+
 
 @products.route('<int:id>', methods=['GET'])
 @token_required
 def get_product_info(uid, id):
-    info = pm.product_info(id, uid)
+    info = pm.product_info(uid, id)
     if info['rating']:
         info['rating'] = float(info['rating'])
     else:
@@ -65,7 +67,13 @@ def get_comments(uid, id):
 @token_required
 def favorite(uid):
     if request.method == 'GET':
-        result = pm.get_favorits(uid)
+        if not request.args.get('page') == None:
+            page = int(request.args.get('page'))
+        else:
+            page = 1
+        skip = (page - 1) * ITEMS_PER_PAGE
+        limit = ITEMS_PER_PAGE
+        result = pm.get_favorits(uid, skip, limit)
         return jsonify(result), 200
     elif request.method == 'POST':
         pm.add_favorit(uid, request.json['pid'])

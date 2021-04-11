@@ -1,17 +1,24 @@
 from .db import DB
+from utils.sentiment_analyzer import sentiment_analyzer
+from utils.recommender import Recommender
 
-def add_comment(text, time, pid, uid):
+
+def add_comment(text, time, uid, pid):
     id = DB.generate_random_id()
+    sa = sentiment_analyzer(text)
     conn = DB.get_connection()
     c = conn.cursor()
     c.execute(
-        'INSERT INTO comments (id, text, time, pid, uid) values (%s, %s, %s, %s, %s)',
-        (id, text, time, pid, uid))
-    res = c.rowcount
+        'INSERT INTO comments (id, text, time, uid, pid, sentiment_analysis) values (%s, %s, %s, %s, %s, %s)',
+        (id, text, time, uid, pid, int(sa)))
     conn.commit()
     c.close()
     conn.close()
-    return res
+    if sa == 1:
+        Recommender.increase_score(uid, pid)
+    else:
+        Recommender.decrease_score(uid, pid)
+    return id
 
 
 def edit_comment(id, text):

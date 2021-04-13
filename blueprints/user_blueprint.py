@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, make_response
 import models.users_model as um
 from werkzeug.utils import secure_filename
 from utils.uploader import upload_user_image
+from utils.validator import Validator
 
 from utils import security
 from utils.guards import token_required
@@ -16,6 +17,10 @@ def user_info(id):
         info = um.user_info(id)
         return make_response(jsonify(info), 200)
     elif request.method == 'PUT':
+        if not 'firstname' in request.json:
+            return jsonify({"message": "firstname is required"}), 406
+        if not 'lastname' in request.json:
+            return jsonify({"message": "lastname is required"}), 406
         firstname = request.json['firstname']
         lastname = request.json['lastname']
         # change user info
@@ -50,6 +55,9 @@ def change_image(id):
 
 @user.route('change_password', methods=['PUT'])
 @token_required
+@Validator.require(['oldpassword', 'newpassword'])
+@Validator.string(['oldpassword', 'newpassword'])
+@Validator.min_length({'oldpassword': 6, 'newpassword': 6})
 def change_user_password(id):
     newpassword = request.json['newpassword']
     oldpassword = request.json['oldpassword']

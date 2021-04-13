@@ -3,6 +3,7 @@ from functools import wraps
 import jwt
 from .config import JWT_SECRET_KEY
 
+
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):

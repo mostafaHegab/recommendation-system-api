@@ -11,7 +11,10 @@ products = Blueprint('products', __name__)
 @products.route('', methods=['GET'])
 @token_required
 def search(uid):
-    page = int(request.args.get('page'))
+    if not request.args.get('page') == None:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
     skip = (page - 1) * ITEMS_PER_PAGE
     if 's' in request.args:
         res = pm.search_by_name(request.args.get('s'), skip, ITEMS_PER_PAGE)
@@ -23,7 +26,10 @@ def search(uid):
 @products.route('rec', methods=['GET'])
 @token_required
 def get_recommendations(uid):
-    page = int(request.args.get('page'))
+    if not request.args.get('page') == None:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
     skip = (page - 1) * ITEMS_PER_PAGE
     recs = pm.get_recommendations(uid, skip, ITEMS_PER_PAGE)
     return jsonify(recs), 200
@@ -64,10 +70,13 @@ def get_product_info(uid, id):
 #         return jsonify({'message': 'image not provided'}), 403
 
 
-@products.route('<int:id>/comments')
+@products.route('<int:id>/comments', methods=['GET'])
 @token_required
 def get_comments(uid, id):
-    page = int(request.args.get('page'))
+    if not request.args.get('page') == None:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
     skip = (page - 1) * ITEMS_PER_PAGE
     limit = ITEMS_PER_PAGE
     comments = pm.get_comments(id, skip, limit)
@@ -87,6 +96,8 @@ def favorite(uid):
         result = pm.get_favorits(uid, skip, limit)
         return jsonify(result), 200
     elif request.method == 'POST':
+        if not 'pid' in request.json:
+            return jsonify({"message": "pid is required"}), 406
         pm.add_favorit(uid, request.json['pid'])
         return jsonify({'message': 'added'}), 201
 

@@ -1,5 +1,4 @@
 from models.db import DB
-# from random import shuffle
 
 
 class Recommender:
@@ -91,7 +90,7 @@ class Recommender:
             SET f.score = f.score + 1
             UNION
             MATCH (p:Product{{id: $pid}})
-            SET p.nscore = p.nscore + 1
+            SET p.pscore = p.pscore + 1
             UNION
             MATCH (u:User{{id: $uid}}) -[r:REACT]- (p:Product{{id: $pid}})
             SET r.score = r.score + 1

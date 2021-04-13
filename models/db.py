@@ -40,6 +40,7 @@ class DB:
 
     @staticmethod
     def create_tables():
+        print('creating tables')
         conn = DB.get_connection()
         c = conn.cursor()
         for line in open('models/create_tables.sql'):
@@ -47,6 +48,7 @@ class DB:
                 c.execute(line)
         c.close()
         conn.close()
+        print('tables created')
 
     @staticmethod
     def init_data():
@@ -55,11 +57,12 @@ class DB:
         c = conn.cursor()
         c.execute('INSERT INTO users (id, firstname, lastname, email, password, verified) VALUES (0, "graduation", "project", "g@p.com", "graduation project", 1)')
         data = pd.read_csv('models/movies_data.csv')
+        data['genre'] = data['genre'].apply(eval)
         for i in range(data.shape[0]):
             row = data.iloc[i]
             print(f'adding {i}/{data.shape[0]} - {row["imdb_title_id"]}')
             c.execute('INSERT INTO products (id, name, description, image, tags) VALUES (%s,%s,%s,%s,%s)',
-                      (i, row['original_title'], row['description'], row['poster_url'], row['genre'][1:-1]))
+                      (i, row['original_title'], row['description'], row['poster_url'], ','.join(row['genre'])))
             c.execute('INSERT INTO ratings (id, rate, pid, uid) VALUES (%s, %s, %s,%s)',
                       (i, float(row['avg_vote']/2), i, 0))
         conn.commit()

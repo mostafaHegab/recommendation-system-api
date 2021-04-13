@@ -2,6 +2,28 @@ from .db import DB
 from utils.recommender import Recommender
 
 
+def search_by_name(name, skip, limit):
+    conn = DB.get_connection()
+    c = conn.cursor(dictionary=True)
+    c.execute('select id, name, image from products where LOCATE(%s, name) > 0 LIMIT %s, %s',
+              (f" {name} ", skip, limit))
+    res = c.fetchall()
+    c.close()
+    conn.close()
+    return res
+
+
+def search_by_tag(tag_name, skip, limit):
+    conn = DB.get_connection()
+    c = conn.cursor(dictionary=True)
+    c.execute('select id, name, image from products where LOCATE(%s, tags) > 0 LIMIT %s, %s',
+              (tag_name, skip, limit))
+    res = c.fetchall()
+    c.close()
+    conn.close()
+    return res
+
+
 def get_recommendations(uid, skip, limit):
     return Recommender.hybrid(uid, skip, limit)
 

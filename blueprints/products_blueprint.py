@@ -8,6 +8,18 @@ from utils.guards import token_required
 products = Blueprint('products', __name__)
 
 
+@products.route('', methods=['GET'])
+@token_required
+def search(uid):
+    page = int(request.args.get('page'))
+    skip = (page - 1) * ITEMS_PER_PAGE
+    if 's' in request.args:
+        res = pm.search_by_name(request.args.get('s'), skip, ITEMS_PER_PAGE)
+    elif 't' in request.args:
+        res = pm.search_by_tag(request.args.get('t'), skip, ITEMS_PER_PAGE)
+    return jsonify(res), 200
+
+
 @products.route('rec', methods=['GET'])
 @token_required
 def get_recommendations(uid):
@@ -49,7 +61,6 @@ def get_product_info(uid, id):
 #             upload_product_image(image, id, filename)
 #             pm.set_product_image(id, filename)
 #             return jsonify({'message': 'image uploaded'}), 201
-
 #         return jsonify({'message': 'image not provided'}), 403
 
 

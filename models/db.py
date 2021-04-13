@@ -12,7 +12,7 @@ class DB:
     def __init__(self):
         if len(DB.get_tables()) == 0:
             DB.init_data()
-            DB.init_neo4j_data()
+            # DB.init_neo4j_data()
 
     @staticmethod
     def get_connection():

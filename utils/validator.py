@@ -1,4 +1,5 @@
 from flask import request, jsonify
+from functools import wraps
 import re
 email_regex = '[^@]+@[^@]+\.[^@]+'
 
@@ -8,6 +9,7 @@ class Validator:
     @staticmethod
     def require(fields):
         def decorator(f):
+            @wraps(f)
             def inner(*args, **kwargs):
                 for field in fields:
                     if not field in request.json:
@@ -19,6 +21,7 @@ class Validator:
     @staticmethod
     def string(fields):
         def decorator(f):
+            @wraps(f)
             def inner(*args, **kwargs):
                 for field in fields:
                     if not isinstance(request.json[field], str):
@@ -30,6 +33,7 @@ class Validator:
     @staticmethod
     def integer(fields):
         def decorator(f):
+            @wraps(f)
             def inner(*args, **kwargs):
                 for field in fields:
                     if not isinstance(request.json[field], int):
@@ -41,6 +45,7 @@ class Validator:
     @staticmethod
     def email(fields):
         def decorator(f):
+            @wraps(f)
             def inner(*args, **kwargs):
                 for field in fields:
                     if not re.search(email_regex, request.json[field]):
@@ -52,6 +57,7 @@ class Validator:
     @staticmethod
     def min_length(desc_dict):
         def decorator(f):
+            @wraps(f)
             def inner(*args, **kwargs):
                 for key in desc_dict:
                     if len(request.json[key]) < desc_dict[key]:

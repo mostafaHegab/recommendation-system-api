@@ -18,8 +18,11 @@ def handle_ratings(uid, id):
         if not 'rate' in request.json:
             return jsonify({"message": "rate is required"}), 406
         rate = request.json['rate']
-        rm.add_rate(uid, id, rate)
-        return make_response(jsonify({'message': 'rated'}), 201)
+        try:
+            rm.add_rate(uid, id, rate)
+            return make_response(jsonify({'message': 'rated'}), 201)
+        except:
+            return make_response(jsonify({'message': 'already rated'}), 302)
     elif request.method == 'PUT':
         if not 'rate' in request.json:
             return jsonify({"message": "rate is required"}), 406

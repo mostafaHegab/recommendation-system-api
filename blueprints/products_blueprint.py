@@ -98,8 +98,11 @@ def favorite(uid):
     elif request.method == 'POST':
         if not 'pid' in request.json:
             return jsonify({"message": "pid is required"}), 406
-        pm.add_favorit(uid, request.json['pid'])
-        return jsonify({'message': 'added'}), 201
+        try:
+            pm.add_favorit(uid, request.json['pid'])
+            return jsonify({'message': 'added'}), 201
+        except:
+            return jsonify({'message': 'already added'}), 302
 
 
 @products.route('/fav/<int:pid>', methods=['DELETE'])

@@ -6,7 +6,7 @@ def search_by_name(name, skip, limit):
     conn = DB.get_connection()
     c = conn.cursor(dictionary=True)
     c.execute('select id, name, image from products where LOCATE(%s, name) > 0 LIMIT %s, %s',
-              (f" {name} ", skip, limit))
+              (name, skip, limit))
     res = c.fetchall()
     c.close()
     conn.close()

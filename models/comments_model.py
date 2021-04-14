@@ -1,6 +1,7 @@
 from .db import DB
 from utils.sentiment_analyzer import sentiment_analyzer
 from utils.recommender import Recommender
+import datetime
 
 
 def add_comment(text, time, uid, pid):

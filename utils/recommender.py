@@ -12,6 +12,7 @@ class Recommender:
             row = {}
             for name, value in record[0].items():
                 row[name] = value
+            row['rating'] = row['pscore'] / (row['pscore']+row['nscore']+1) * 5
             data.append(row)
         data.sort(key=lambda i: i['pscore'] / (i['pscore']+i['nscore']+1),
                   reverse=True)

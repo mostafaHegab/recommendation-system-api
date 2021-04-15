@@ -3,6 +3,9 @@ import models.users_model as um
 from werkzeug.utils import secure_filename
 from utils.uploader import upload_user_image
 from utils.validator import Validator
+import time
+import os
+import json
 
 from utils import security
 from utils.guards import token_required
@@ -46,9 +49,12 @@ def change_image(id):
         if not ext.upper() in allowed_image_extentions:
             return jsonify({'message': 'unacceptable extension'}), 403
 
-        newfilename = f'{id}.{ext}'
+        newfilename = f'{int(time.time())}-{id}.{ext}'
         upload_user_image(image, newfilename)
         um.change_profile_image(id, newfilename)
+        old_image = request.args.get('old-image')
+        if old_image != 'user.png' and os.path.exists(f'images/users/{old_image}'):
+            os.remove(f'images/users/{old_image}')
         return make_response(jsonify({'message': 'Profile Picture Changed'}), 200)
     return jsonify({'message': 'image not provided'}), 403
 

@@ -5,7 +5,7 @@ from utils.recommender import Recommender
 def search_by_name(name, skip, limit):
     conn = DB.get_connection()
     c = conn.cursor(dictionary=True)
-    c.execute('select products.id, products.name, products.image, CAST((SELECT AVG(rate) FROM ratings WHERE pid = products.id) AS FLOAT) AS rating from products where LOCATE(%s, name) > 0 LIMIT %s, %s',
+    c.execute('select products.id, products.name, products.image, products.tags, CAST((SELECT AVG(rate) FROM ratings WHERE pid = products.id) AS FLOAT) AS rating from products where LOCATE(%s, name) > 0 LIMIT %s, %s',
               (name, skip, limit))
     res = c.fetchall()
     c.close()
@@ -16,7 +16,7 @@ def search_by_name(name, skip, limit):
 def search_by_tag(tag_name, skip, limit):
     conn = DB.get_connection()
     c = conn.cursor(dictionary=True)
-    c.execute('select products.id, products.name, products.image, CAST((SELECT AVG(rate) FROM ratings WHERE pid = products.id) AS FLOAT) AS rating from products where LOCATE(%s, tags) > 0 LIMIT %s, %s',
+    c.execute('select products.id, products.name, products.image, products.tags, CAST((SELECT AVG(rate) FROM ratings WHERE pid = products.id) AS FLOAT) AS rating from products where LOCATE(%s, tags) > 0 LIMIT %s, %s',
               (tag_name, skip, limit))
     res = c.fetchall()
     c.close()

@@ -61,15 +61,16 @@ class DB:
         for i in range(data.shape[0]):
             row = data.iloc[i]
             print(f'adding {i}/{data.shape[0]} - {row["imdb_title_id"]}')
+            row['genre'] = [genre.title() for genre in row['genre']]
             c.execute('INSERT INTO products (id, name, description, image, tags) VALUES (%s,%s,%s,%s,%s)',
-                      (i, row['original_title'], row['description'], row['poster_url'], ','.join(row['genre'])))
+                      (i, row['original_title'], row['description'], row['poster_url'], ', '.join(row['genre'])))
             c.execute('INSERT INTO ratings (id, rate, pid, uid) VALUES (%s, %s, %s,%s)',
                       (i, float(row['avg_vote']/2), i, 0))
         conn.commit()
         c.close()
         conn.close()
 
-    @staticmethod
+    @ staticmethod
     def init_neo4j_data():
         g = DB.get_neo4j_connection()
         g.run('MATCH (n) DETACH DELETE n')
@@ -98,7 +99,7 @@ class DB:
                 "tags": row['genre_ids']
             })
 
-    @staticmethod
+    @ staticmethod
     def generate_random_id():
         id = f'{int(datetime.datetime.now().timestamp())}{randint(0,9999)}'
         id = list(id)

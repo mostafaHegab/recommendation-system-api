@@ -55,7 +55,7 @@ def change_image(id):
         old_image = request.args.get('old-image')
         if old_image != 'user.png' and os.path.exists(f'images/users/{old_image}'):
             os.remove(f'images/users/{old_image}')
-        return make_response(jsonify({'message': 'Profile Picture Changed'}), 200)
+        return make_response(jsonify({'image': newfilename}), 200)
     return jsonify({'message': 'image not provided'}), 403
 
 

@@ -27,6 +27,8 @@ def search_by_tag(tag_name, skip, limit):
 def get_recommendations(uid, skip, limit):
     return Recommender.hybrid(uid, skip, limit)
 
+def get_similar_product(pid, skip, limit):
+    return Recommender.get_similar_product(pid, skip, limit)
 
 def get_products(uid, skip, limit):
     conn = DB.get_connection()

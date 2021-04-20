@@ -34,6 +34,17 @@ def get_recommendations(uid):
     recs = pm.get_recommendations(uid, skip, ITEMS_PER_PAGE)
     return jsonify(recs), 200
 
+@products.route('rec', methods=['GET'])
+@token_required
+def get_similar_product(uid):        
+    pid = int(request.args.get('pid'))
+    if not request.args.get('page') == None:
+        page = int(request.args.get('page'))
+    else:
+        page = 1
+    skip = (page - 1) * ITEMS_PER_PAGE
+    recs = pm.get_similar_product(pid, skip, ITEMS_PER_PAGE)
+    return jsonify(recs), 200
 
 @products.route('<int:id>', methods=['GET'])
 @token_required

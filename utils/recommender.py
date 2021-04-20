@@ -53,6 +53,18 @@ class Recommender:
         r2 = Recommender.collaborative(uid, skip, limit)
         r = list({x['id']: x for x in r1 + r2}.values())
         return r
+    
+    @staticmethod
+    def get_similar_product(pid, skip, limit):
+        result = Recommender.g.run(f'''
+            MATCH (:Product{{id: $id}}) -[:HAS_TAG]- (t:Tag)-[:HAS_TAG]-(p:Product) return p
+            SKIP $skip LIMIT $limit
+        ''', {
+            "id": pid,
+            "skip": skip,
+            "limit": limit
+        })
+        return Recommender.process_result(result)
 
     @staticmethod
     def increase_score(uid, pid):

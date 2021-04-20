@@ -21,11 +21,7 @@ class Recommender:
     @staticmethod
     def content_based(uid, skip, limit):
         result = Recommender.g.run(f'''
-            MATCH (u:User{{id:$id}}) -[r:REACT]-> (:Product) -[:HAS_TAG]-> (:Tag) <-[:HAS_TAG]- (p:Product)
-            // WHERE r.score < 1
-            WITH r,p
-            ORDER BY r.score DESC
-            RETURN DISTINCT p AS rec
+            MATCH (u:User{{id:$id}}) -[f:FOLLOWS]-> (:Tag) <-[:HAS_TAG]- (p:Product) WITH f,p ORDER BY f.score DESC RETURN DISTINCT p
             SKIP $skip LIMIT $limit
         ''', {
             "id": uid,
@@ -36,36 +32,13 @@ class Recommender:
 
     @staticmethod
     def collaborative(uid, skip, limit):
-        # result = Recommender.g.run(f'''
-        #     MATCH
-        #     (u1:User{{id:$id}}) -[f1:REACT]-> (:Product) <-[f2:REACT]- (u2:User)
-        #     WITH SUM(f1.score * f2.score) / SQRT(SUM(f1.score * f1.score) * SUM(f2.score * f2.score)) AS sim, u1, u2, f2
-        #     WHERE sim > 0.5
-        #     WITH sim, u1
-        #     MATCH (u2) -[f:REACT]-> (p:Product)
-        #     WHERE NOT (u1)--(p)
-        #     ORDER BY sim DESC, f.score DESC
-        #     RETURN DISTINCT p AS rec
-        #     SKIP $skip LIMIT $limit
-        # ''', {
-        #     "id": uid,
-        #     "skip": skip,
-        #     "limit": limit
-        # })
         result = Recommender.g.run(f'''
-            MATCH (u1:User{{id:$id}}) -[:REACT]-> (p:Product) <-[:REACT]- (u2:User)
-            WHERE u1 <> u2
-            WITH u1, u2, COUNT(DISTINCT p) AS intersection
-            MATCH (u:User) -[:REACT]-> (p:Product)
-            WHERE u IN [u1,u2]
-            WITH u1, u2, (intersection*1.0 / COUNT(DISTINCT p)) AS j
-            ORDER BY j DESC
+            MATCH (u1:User{{id:$id}}) -[f1:FOLLOWS]-> (:Tag) <-[f2:FOLLOWS]- (u2:User)
+            WITH SUM(f1.score * f2.score) / SQRT(SUM(f1.score * f1.score) * SUM(f2.score * f2.score)) AS sim, u1, u2
             WITH u1, COLLECT(u2)[0..10] AS kneighbours
             MATCH (p:Product) <-[r:REACT]- (u:User)
-            WHERE u IN kneighbours AND NOT (u1)--(p)
-            WITH p
-            ORDER BY r.score
-            RETURN DISTINCT p
+            WHERE u IN kneighbours 
+            RETURN DISTINCT p AS rec
             SKIP $skip LIMIT $limit
         ''', {
             "id": uid,

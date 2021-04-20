@@ -15,12 +15,7 @@ def create_user(firstname, lastname, email, password, verified, image):
     conn.close()
     neo_g = DB.get_neo4j_connection()
     neo_g.run(f'''
-                CREATE (u:User{{id:$id}})
-                UNION
-                MATCH (p:Product), (u:User{{id:$id}})
-                WITH p,u
-                ORDER BY p.pscore DESC LIMIT 10
-                MERGE (u) -[:REACT{{score:1}}]- (p)
+               CREATE (n:User {{id:$id}} ) WITH n MATCH (t: Tag) MERGE (n)-[:FOLLOWS{{score: 1}}]->(t)
             ''', {
         "id": id
     })

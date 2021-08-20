@@ -16,7 +16,7 @@ pipenv shell
 5- install dependencies
 ```
 pipenv install
-``
+```
 6- start the server
 ```
 python app.py
